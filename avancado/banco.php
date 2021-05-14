@@ -1,7 +1,28 @@
 <?php
 
-function exibirMensagem($msg){
+
+function exibirMensagem($msg)
+{
     echo $msg . PHP_EOL;
+}
+
+function depoistar(array $conta, float $valorDepositado): array
+{
+    $conta['saldo'] += $valorDepositado;
+    exibirMensagem("Novo saldo adicionado: " . 'Titular: ' . $conta['titular'] . "/Valor: " .$conta['saldo']);
+    return $conta;
+}
+
+function saque(float $saque, array $conta,  $cpf): array
+{
+    echo "AQUI ". $conta['saldo'];
+    if($saque >  $conta['saldo']){
+        exibirMensagem("Saque negado! Saldo insuficiente " . $conta['titular']  .'/Valor:'. $conta['saldo']);
+    }else{    
+        $conta['saldo'] -= $saque;
+        exibirMensagem($cpf . " " . 'Titular: ' .$conta['titular']  .'/Valor:'. $conta['saldo'] ." Saque realizado com sucesso!");
+    }
+    return $conta;
 }
 
 $contasCorrentes = [
@@ -20,17 +41,13 @@ $contasCorrentes = [
 ];
 
 $saque = 500;
-$saldo = 0;
 
-foreach ($contasCorrentes as $cpf => $conta) {
+$depositar = 900;
 
-    $saldo = $conta['saldo'];
-
-    if($saque > $saldo){
-        exibirMensagem("Saque negado! Saldo insuficiente");
-    }else{    
-        $saldo -= 500;
-        exibirMensagem($cpf . " " . $conta['titular']  . " Saque realizado com sucesso!");
-    }
-   
+foreach ($contasCorrentes as $cpf => $conta) { 
+    exibirMensagem("Saldo Original: Titular:  {$conta['titular']}  /Valor:  {$conta['saldo']}");  
+    $conta = depoistar($conta, $depositar);
+    $conta = saque($saque, $conta, $cpf);   
 }
+
+
